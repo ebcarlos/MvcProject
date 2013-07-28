@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Utilisateurs";
+    string entityName = "User";
+    List<DataAccess.T_User> entities = (List<DataAccess.T_User>)ViewBag.Entities;
+}
+
+<h2>@ViewBag.Title</h2>
+<br />
+
+<button class="btn btn-primary" onclick="OnClickAdd('@entityName')">Nouvel utilisateur</button>
+<br />
+<br />
+
+@if (entities.Count == 0)
+{
+    <p>Aucun utlisateur</p>
+    <style>
+        #manager_tab {
+            display: none;
+        }
+    </style>
+}
+
+<table class="table table-bordered" id="manager_tab">
+    <tr>
+        <th>#</th>
+        <th>Nom</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Inscription</th>
+        <th></th>
+        <th></th>
+    </tr>
+    @foreach (var entity in entities.Select((value, index) => new { value, index }))
+    {
+        <tr id="tr_@entity.value.user_id">
+            <td class="td_num">
+                @entity.index
+            </td>
+            <td id="user_name_@entity.value.user_id">
+                @entity.value.user_name
+            </td>
+            <td id="user_status_@entity.value.user_id">
+                @Html.Raw(DataAccess.Status.GetMemberName<DataAccess.UserStatus>(entity.value.user_status))
+            </td>
+            <td id="user_desc_@entity.value.user_id">
+                @entity.value.user_desc
+            </td>
+            <td id="user_date_subscription_@entity.value.user_id">
+                @entity.value.user_date_subscription.ToShortDateString()
+            </td>
+            <td class="td_btn">
+                <button class="btn btn-success" onclick="OnClickEdit('@entityName', @entity.value.user_id)">Editer</button>
+            </td>
+            <td class="td_btn">
+                <button class="btn btn-danger" onclick="OnClickRemove('@entityName', @entity.value.user_id)">Supprimer</button>
+            </td>
+        </tr>
+    }
+</table>
+<div id="manager_contener"></div>

@@ -1,0 +1,42 @@
+﻿@model Softox.Models.UserModel
+@using (Ajax.BeginForm("SaveChanges", "User",
+    new AjaxOptions { OnSuccess = "OnSaveChanges" },
+    new { @class = "form-horizontal" }))
+{
+    <div id="manager_modal" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            @if (Model.user_id <= 0)
+            {
+                <h3>Nouvel utilisateur</h3>
+            }
+            else
+            {
+                <h3>Modifier utilisateur</h3>
+            }
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(m => m.user_id)
+            <div class="control-group">
+                <label class="control-label">@Html.LabelFor(m => m.user_name)</label>
+                <div class="controls">
+                    @Html.TextBoxFor(m => m.user_name)
+                    <p>@Html.ValidationMessageFor(m => m.user_name)</p>
+                </div>
+                <label class="control-label">@Html.LabelFor(m => m.user_desc)</label>
+                <div class="controls">
+                    @Html.TextBoxFor(m => m.user_desc)
+                    <p>@Html.ValidationMessageFor(m => m.user_desc)</p>
+                </div>
+                <label class="control-label">@Html.LabelFor(m => m.user_status)</label>
+                <div class="controls">
+                    @Html.DropDownListFor(x => x.user_status, Model.user_status_list)
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Fermer</a>
+            <input type="submit" class="btn btn-primary" value="Sauvegarder" />
+        </div>
+    </div>
+}

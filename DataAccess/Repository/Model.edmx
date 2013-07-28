@@ -1,0 +1,389 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SoftoxModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="SoftoxModelStoreContainer">
+          <EntitySet Name="T_Category" EntityType="SoftoxModel.Store.T_Category" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="T_Comment" EntityType="SoftoxModel.Store.T_Comment" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="T_Top" EntityType="SoftoxModel.Store.T_Top" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="T_TopElement" EntityType="SoftoxModel.Store.T_TopElement" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="T_User" EntityType="SoftoxModel.Store.T_User" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_T_Comment_T_Top" Association="SoftoxModel.Store.FK_T_Comment_T_Top">
+            <End Role="T_Top" EntitySet="T_Top" />
+            <End Role="T_Comment" EntitySet="T_Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Comment_T_User" Association="SoftoxModel.Store.FK_T_Comment_T_User">
+            <End Role="T_User" EntitySet="T_User" />
+            <End Role="T_Comment" EntitySet="T_Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Top_T_Category" Association="SoftoxModel.Store.FK_T_Top_T_Category">
+            <End Role="T_Category" EntitySet="T_Category" />
+            <End Role="T_Top" EntitySet="T_Top" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Top_T_User" Association="SoftoxModel.Store.FK_T_Top_T_User">
+            <End Role="T_User" EntitySet="T_User" />
+            <End Role="T_Top" EntitySet="T_Top" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_TopElement_T_Top" Association="SoftoxModel.Store.FK_T_TopElement_T_Top">
+            <End Role="T_Top" EntitySet="T_Top" />
+            <End Role="T_TopElement" EntitySet="T_TopElement" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="T_Category">
+          <Key>
+            <PropertyRef Name="cat_id" />
+          </Key>
+          <Property Name="cat_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="cat_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="T_Comment">
+          <Key>
+            <PropertyRef Name="com_id" />
+          </Key>
+          <Property Name="com_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="com_fk_top_id" Type="int" Nullable="false" />
+          <Property Name="com_fk_user_id" Type="int" Nullable="false" />
+          <Property Name="com_text" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="com_date_entry" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_Top">
+          <Key>
+            <PropertyRef Name="top_id" />
+          </Key>
+          <Property Name="top_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="top_fk_cat_id" Type="int" Nullable="false" />
+          <Property Name="top_fk_user_id" Type="int" Nullable="false" />
+          <Property Name="top_title" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="top_description" Type="nvarchar" MaxLength="50" />
+          <Property Name="top_source" Type="nvarchar" MaxLength="50" />
+          <Property Name="top_date_creation" Type="datetime" Nullable="false" />
+          <Property Name="top_date_modification" Type="datetime" />
+          <Property Name="top_view_count" Type="int" Nullable="false" />
+          <Property Name="top_status" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_TopElement">
+          <Key>
+            <PropertyRef Name="topel_id" />
+          </Key>
+          <Property Name="topel_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="topel_fk_top_id" Type="int" Nullable="false" />
+          <Property Name="topel_number" Type="int" Nullable="false" />
+          <Property Name="topel_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="topel_desc" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="T_User">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="user_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="user_password" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="user_desc" Type="nvarchar" MaxLength="50" />
+          <Property Name="user_date_subscription" Type="datetime" Nullable="false" />
+          <Property Name="user_status" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_T_Comment_T_Top">
+          <End Role="T_Top" Type="SoftoxModel.Store.T_Top" Multiplicity="1" />
+          <End Role="T_Comment" Type="SoftoxModel.Store.T_Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Top">
+              <PropertyRef Name="top_id" />
+            </Principal>
+            <Dependent Role="T_Comment">
+              <PropertyRef Name="com_fk_top_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Comment_T_User">
+          <End Role="T_User" Type="SoftoxModel.Store.T_User" Multiplicity="1" />
+          <End Role="T_Comment" Type="SoftoxModel.Store.T_Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_User">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="T_Comment">
+              <PropertyRef Name="com_fk_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Top_T_Category">
+          <End Role="T_Category" Type="SoftoxModel.Store.T_Category" Multiplicity="1" />
+          <End Role="T_Top" Type="SoftoxModel.Store.T_Top" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Category">
+              <PropertyRef Name="cat_id" />
+            </Principal>
+            <Dependent Role="T_Top">
+              <PropertyRef Name="top_fk_cat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Top_T_User">
+          <End Role="T_User" Type="SoftoxModel.Store.T_User" Multiplicity="1" />
+          <End Role="T_Top" Type="SoftoxModel.Store.T_Top" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_User">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="T_Top">
+              <PropertyRef Name="top_fk_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_TopElement_T_Top">
+          <End Role="T_Top" Type="SoftoxModel.Store.T_Top" Multiplicity="1" />
+          <End Role="T_TopElement" Type="SoftoxModel.Store.T_TopElement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Top">
+              <PropertyRef Name="top_id" />
+            </Principal>
+            <Dependent Role="T_TopElement">
+              <PropertyRef Name="topel_fk_top_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SoftoxModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="SoftoxEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="T_Category" EntityType="SoftoxModel.T_Category" />
+          <EntitySet Name="T_Comment" EntityType="SoftoxModel.T_Comment" />
+          <EntitySet Name="T_Top" EntityType="SoftoxModel.T_Top" />
+          <EntitySet Name="T_TopElement" EntityType="SoftoxModel.T_TopElement" />
+          <EntitySet Name="T_User" EntityType="SoftoxModel.T_User" />
+          <AssociationSet Name="FK_T_Top_T_Category" Association="SoftoxModel.FK_T_Top_T_Category">
+            <End Role="T_Category" EntitySet="T_Category" />
+            <End Role="T_Top" EntitySet="T_Top" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Comment_T_Top" Association="SoftoxModel.FK_T_Comment_T_Top">
+            <End Role="T_Top" EntitySet="T_Top" />
+            <End Role="T_Comment" EntitySet="T_Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Comment_T_User" Association="SoftoxModel.FK_T_Comment_T_User">
+            <End Role="T_User" EntitySet="T_User" />
+            <End Role="T_Comment" EntitySet="T_Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Top_T_User" Association="SoftoxModel.FK_T_Top_T_User">
+            <End Role="T_User" EntitySet="T_User" />
+            <End Role="T_Top" EntitySet="T_Top" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_TopElement_T_Top" Association="SoftoxModel.FK_T_TopElement_T_Top">
+            <End Role="T_Top" EntitySet="T_Top" />
+            <End Role="T_TopElement" EntitySet="T_TopElement" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="T_Category">
+          <Key>
+            <PropertyRef Name="cat_id" />
+          </Key>
+          <Property Name="cat_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="cat_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="T_Top" Relationship="SoftoxModel.FK_T_Top_T_Category" FromRole="T_Category" ToRole="T_Top" />
+        </EntityType>
+        <EntityType Name="T_Comment">
+          <Key>
+            <PropertyRef Name="com_id" />
+          </Key>
+          <Property Name="com_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="com_fk_top_id" Type="Int32" Nullable="false" />
+          <Property Name="com_fk_user_id" Type="Int32" Nullable="false" />
+          <Property Name="com_text" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="com_date_entry" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="T_Top" Relationship="SoftoxModel.FK_T_Comment_T_Top" FromRole="T_Comment" ToRole="T_Top" />
+          <NavigationProperty Name="T_User" Relationship="SoftoxModel.FK_T_Comment_T_User" FromRole="T_Comment" ToRole="T_User" />
+        </EntityType>
+        <EntityType Name="T_Top">
+          <Key>
+            <PropertyRef Name="top_id" />
+          </Key>
+          <Property Name="top_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="top_fk_cat_id" Type="Int32" Nullable="false" />
+          <Property Name="top_fk_user_id" Type="Int32" Nullable="false" />
+          <Property Name="top_title" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="top_description" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="top_source" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="top_date_creation" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="top_date_modification" Type="DateTime" Precision="3" />
+          <Property Name="top_view_count" Type="Int32" Nullable="false" />
+          <Property Name="top_status" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="T_Category" Relationship="SoftoxModel.FK_T_Top_T_Category" FromRole="T_Top" ToRole="T_Category" />
+          <NavigationProperty Name="T_Comment" Relationship="SoftoxModel.FK_T_Comment_T_Top" FromRole="T_Top" ToRole="T_Comment" />
+          <NavigationProperty Name="T_User" Relationship="SoftoxModel.FK_T_Top_T_User" FromRole="T_Top" ToRole="T_User" />
+          <NavigationProperty Name="T_TopElement" Relationship="SoftoxModel.FK_T_TopElement_T_Top" FromRole="T_Top" ToRole="T_TopElement" />
+        </EntityType>
+        <EntityType Name="T_TopElement">
+          <Key>
+            <PropertyRef Name="topel_id" />
+          </Key>
+          <Property Name="topel_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="topel_fk_top_id" Type="Int32" Nullable="false" />
+          <Property Name="topel_number" Type="Int32" Nullable="false" />
+          <Property Name="topel_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="topel_desc" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="T_Top" Relationship="SoftoxModel.FK_T_TopElement_T_Top" FromRole="T_TopElement" ToRole="T_Top" />
+        </EntityType>
+        <EntityType Name="T_User">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="user_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="user_password" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="user_desc" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="user_date_subscription" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="user_status" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="T_Comment" Relationship="SoftoxModel.FK_T_Comment_T_User" FromRole="T_User" ToRole="T_Comment" />
+          <NavigationProperty Name="T_Top" Relationship="SoftoxModel.FK_T_Top_T_User" FromRole="T_User" ToRole="T_Top" />
+        </EntityType>
+        <Association Name="FK_T_Top_T_Category">
+          <End Role="T_Category" Type="SoftoxModel.T_Category" Multiplicity="1" />
+          <End Role="T_Top" Type="SoftoxModel.T_Top" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Category">
+              <PropertyRef Name="cat_id" />
+            </Principal>
+            <Dependent Role="T_Top">
+              <PropertyRef Name="top_fk_cat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Comment_T_Top">
+          <End Role="T_Top" Type="SoftoxModel.T_Top" Multiplicity="1" />
+          <End Role="T_Comment" Type="SoftoxModel.T_Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Top">
+              <PropertyRef Name="top_id" />
+            </Principal>
+            <Dependent Role="T_Comment">
+              <PropertyRef Name="com_fk_top_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Comment_T_User">
+          <End Role="T_User" Type="SoftoxModel.T_User" Multiplicity="1" />
+          <End Role="T_Comment" Type="SoftoxModel.T_Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_User">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="T_Comment">
+              <PropertyRef Name="com_fk_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Top_T_User">
+          <End Role="T_User" Type="SoftoxModel.T_User" Multiplicity="1" />
+          <End Role="T_Top" Type="SoftoxModel.T_Top" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_User">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="T_Top">
+              <PropertyRef Name="top_fk_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_TopElement_T_Top">
+          <End Role="T_Top" Type="SoftoxModel.T_Top" Multiplicity="1" />
+          <End Role="T_TopElement" Type="SoftoxModel.T_TopElement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Top">
+              <PropertyRef Name="top_id" />
+            </Principal>
+            <Dependent Role="T_TopElement">
+              <PropertyRef Name="topel_fk_top_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SoftoxModelStoreContainer" CdmEntityContainer="SoftoxEntities">
+          <EntitySetMapping Name="T_Category">
+            <EntityTypeMapping TypeName="SoftoxModel.T_Category">
+              <MappingFragment StoreEntitySet="T_Category">
+                <ScalarProperty Name="cat_id" ColumnName="cat_id" />
+                <ScalarProperty Name="cat_name" ColumnName="cat_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Comment">
+            <EntityTypeMapping TypeName="SoftoxModel.T_Comment">
+              <MappingFragment StoreEntitySet="T_Comment">
+                <ScalarProperty Name="com_id" ColumnName="com_id" />
+                <ScalarProperty Name="com_fk_top_id" ColumnName="com_fk_top_id" />
+                <ScalarProperty Name="com_fk_user_id" ColumnName="com_fk_user_id" />
+                <ScalarProperty Name="com_text" ColumnName="com_text" />
+                <ScalarProperty Name="com_date_entry" ColumnName="com_date_entry" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Top">
+            <EntityTypeMapping TypeName="SoftoxModel.T_Top">
+              <MappingFragment StoreEntitySet="T_Top">
+                <ScalarProperty Name="top_id" ColumnName="top_id" />
+                <ScalarProperty Name="top_fk_cat_id" ColumnName="top_fk_cat_id" />
+                <ScalarProperty Name="top_fk_user_id" ColumnName="top_fk_user_id" />
+                <ScalarProperty Name="top_title" ColumnName="top_title" />
+                <ScalarProperty Name="top_description" ColumnName="top_description" />
+                <ScalarProperty Name="top_source" ColumnName="top_source" />
+                <ScalarProperty Name="top_date_creation" ColumnName="top_date_creation" />
+                <ScalarProperty Name="top_date_modification" ColumnName="top_date_modification" />
+                <ScalarProperty Name="top_view_count" ColumnName="top_view_count" />
+                <ScalarProperty Name="top_status" ColumnName="top_status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_TopElement">
+            <EntityTypeMapping TypeName="SoftoxModel.T_TopElement">
+              <MappingFragment StoreEntitySet="T_TopElement">
+                <ScalarProperty Name="topel_id" ColumnName="topel_id" />
+                <ScalarProperty Name="topel_fk_top_id" ColumnName="topel_fk_top_id" />
+                <ScalarProperty Name="topel_number" ColumnName="topel_number" />
+                <ScalarProperty Name="topel_name" ColumnName="topel_name" />
+                <ScalarProperty Name="topel_desc" ColumnName="topel_desc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_User">
+            <EntityTypeMapping TypeName="SoftoxModel.T_User">
+              <MappingFragment StoreEntitySet="T_User">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="user_name" ColumnName="user_name" />
+                <ScalarProperty Name="user_password" ColumnName="user_password" />
+                <ScalarProperty Name="user_desc" ColumnName="user_desc" />
+                <ScalarProperty Name="user_date_subscription" ColumnName="user_date_subscription" />
+                <ScalarProperty Name="user_status" ColumnName="user_status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

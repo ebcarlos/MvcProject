@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Classements";
+    string entityName = "Top";
+    IList<DataAccess.T_Top> entities = ViewBag.Entities;
+}
+
+<h2>@ViewBag.Title</h2>
+<br />
+
+<button class="btn btn-primary" onclick="OnClickAdd('@entityName')">Nouveau classement</button>
+<br />
+<br />
+
+@if (entities.Count == 0)
+{
+    <p>Aucun classement</p>
+    <style>
+        #manager_tab {
+            display: none;
+        }
+    </style>
+}
+
+<table class="table table-bordered" id="manager_tab">
+    <tr>
+        <th>#</th>
+        <th>Titre</th>
+        <th></th>
+        <th></th>
+    </tr>
+    @foreach (var entity in entities.Select((value, index) => new { value, index }))
+    {
+        <tr id="tr_@entity.value.top_id">
+            <td class="td_num">
+                @entity.index
+            </td>
+            <td id="top_title_@entity.value.top_id">
+                @entity.value.top_title
+            </td>
+            <td class="td_btn">
+                <button class="btn btn-success" onclick="OnClickEdit('@entityName', @entity.value.top_id)">Editer</button>
+            </td>
+            <td class="td_btn">
+                <button class="btn btn-danger" onclick="OnClickRemove('@entityName', @entity.value.top_id)">Supprimer</button>
+            </td>
+        </tr>
+    }
+</table>
+<div id="manager_contener"></div>

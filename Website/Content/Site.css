@@ -1,0 +1,17 @@
+﻿/* General */
+.page {
+    margin: 50px auto;
+}
+
+form {
+    margin: 0 0 0 0;
+}
+
+/* Entities manager */
+.td_num {
+    width: 20px;
+}
+
+.td_btn {
+    width: 1px;
+}

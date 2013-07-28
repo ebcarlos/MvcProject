@@ -1,0 +1,48 @@
+﻿@using DataAccess.Repository
+
+@{
+    ViewBag.Title = "Catégories";
+    string entityName = "Category";
+    List<T_Category> entities = (List<T_Category>)ViewBag.Entities;
+}
+
+<h2>@ViewBag.Title</h2>
+<br />
+
+<button class="btn btn-primary" onclick="OnClickAdd('@entityName')">Nouvelle catégorie</button>
+<br />
+<br />
+
+@if (entities.Count == 0)
+{
+    <p>Aucune catégorie</p>
+}
+else
+{
+    <table class="table table-bordered" id="manager_tab">
+        <tr>
+            <th>#</th>
+            <th>Nom</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @foreach (var entity in entities.Select((value, index) => new { value, index }))
+        {
+            <tr id="cat_tr_@entity.value.cat_id">
+                <td class="td_num">
+                    @entity.index
+                </td>
+                <td id="cat_name_@entity.value.cat_id">
+                    @entity.value.cat_name
+                </td>
+                <td class="td_btn">
+                    <button class="btn btn-success" onclick="OnClickEdit('@entityName', @entity.value.cat_id)">Editer</button>
+                </td>
+                <td class="td_btn">
+                    <button class="btn btn-danger" onclick="OnClickRemove('@entityName', @entity.value.cat_id)">Supprimer</button>
+                </td>
+            </tr>
+        }
+    </table>
+    <div id="manager_contener"></div>
+}

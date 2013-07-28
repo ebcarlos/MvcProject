@@ -1,0 +1,48 @@
+﻿@model Softox.Models.TopModel
+@using (Ajax.BeginForm("SaveChanges", "Top",
+    new AjaxOptions { OnSuccess = "OnSaveChanges" },
+    new { @class = "form-horizontal" }))
+{
+    <div id="manager_modal" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            @if (Model.top_id <= 0)
+            {
+                <h3>Nouveau classement</h3>
+            }
+            else
+            {
+                <h3>Modifier classement</h3>
+            }
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(m => m.top_id)
+            <div class="control-group">
+                <label class="control-label">@Html.LabelFor(m => m.top_title)</label>
+                <div class="controls">
+                    @Html.TextBoxFor(m => m.top_title)
+                    <p>@Html.ValidationMessageFor(m => m.top_title)</p>
+                </div>
+                <label class="control-label">@Html.LabelFor(m => m.top_description)</label>
+                <div class="controls">
+                    @Html.TextAreaFor(m => m.top_description, new { @rows = 3 })
+                    <p>@Html.ValidationMessageFor(m => m.top_description)</p>
+                </div>
+                <label class="control-label">@Html.LabelFor(m => m.top_source)</label>
+                <div class="controls">
+                    @Html.TextBoxFor(m => m.top_source)
+                    <p>@Html.ValidationMessageFor(m => m.top_source)</p>
+                </div>
+                <label class="control-label">@Html.LabelFor(m => m.CategoryList)</label>
+                <div class="controls">
+                    @Html.TextBoxFor(m => m.CategoryList)
+                    <p>@Html.DropDownListFor(x => x.CategorySelected, Model.CategoryList)</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Fermer</a>
+            <input type="submit" class="btn btn-primary" value="Sauvegarder" />
+        </div>
+    </div>
+}

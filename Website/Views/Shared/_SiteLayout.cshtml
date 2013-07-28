@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>@ViewBag.Title</title>
+    <meta charset="UTF-8">
+    <meta name="author" content="Romain Parage">
+    @Styles.Render("~/styles")
+    @Scripts.Render("~/scripts")
+</head>
+<body>
+    @Html.Partial("_Menu")
+    <div class="container page">
+        @RenderBody()
+    </div>
+</body>
+</html>
