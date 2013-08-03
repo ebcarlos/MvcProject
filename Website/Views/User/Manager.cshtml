@@ -28,10 +28,6 @@
                     @Html.TextBoxFor(m => m.user_desc)
                     <p>@Html.ValidationMessageFor(m => m.user_desc)</p>
                 </div>
-                <label class="control-label">@Html.LabelFor(m => m.user_status)</label>
-                <div class="controls">
-                    @Html.DropDownListFor(x => x.user_status, Model.user_status_list)
-                </div>
             </div>
         </div>
         <div class="modal-footer">

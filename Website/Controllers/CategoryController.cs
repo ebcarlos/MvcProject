@@ -9,13 +9,27 @@ namespace Softox.Controllers
 {
     public class CategoryController : Controller
     {
+        private CategoryRepository _repository;
+
+        public CategoryController()
+        {
+            _repository = new CategoryRepository();
+        }
+
         public ActionResult Index()
         {
-            using (var context = new CategoryRepository())
-            {
-                ViewBag.Entities = context.Get().OrderBy(x => x.cat_name).ToList();
-                return View();
-            }
+            ViewBag.Entities = _repository.Get().OrderBy(x => x.cat_name).ToList();
+            return View();
+        }
+
+        public ActionResult Remove(int id)
+        {
+            T_Category entity = _repository.GetById(id);
+            _repository.Remove(entity);
+            _repository.SaveChanges();
+            Log.Info(string.Format("Remove category id={0} name={1}", entity.cat_id, entity.cat_name));
+
+            return Content("Catégorie supprimée.", "text/html");
         }
 
         public ActionResult Add()
@@ -25,10 +39,7 @@ namespace Softox.Controllers
 
         public ActionResult Edit(int id)
         {
-            using (var context = new CategoryRepository())
-            {
-                return PartialView("Manager", CategoryModel.EntityToModel(context.GetById(id)));
-            }
+            return PartialView("Manager", CategoryModel.EntityToModel(_repository.GetById(id)));
         }
 
         [HttpPost]
@@ -38,55 +49,40 @@ namespace Softox.Controllers
                 return null;
 
             T_Category entity = CategoryModel.ModelToEntity(model);
-            string msg = string.Empty;
-            bool isNew = true;
+
+            // Save add action
             if (model.cat_id <= 0)
             {
-                msg = "Nouvelle catégorie ajoutée.";
-                using (var context = new CategoryRepository())
-                {
-                    context.Add(entity);
-                    context.SaveChanges();
-                    Log.Info(string.Format("Edit category id={0} name={1}", entity.cat_id, entity.cat_name));
-                }
+                _repository.Add(entity);
+                _repository.SaveChanges();
+                Log.Info(string.Format("Edit category id={0} name={1}", entity.cat_id, entity.cat_name));
+
+                return GenerateJson(entity, true, "Nouvelle catégorie ajoutée.");
             }
+            // Save edit action
             else
             {
-                msg = "Catégorie modifiée.";
-                isNew = false;
-                using (var context = new CategoryRepository())
-                {
-                    context.Edit(entity);
-                    context.SaveChanges();
-                    Log.Info(string.Format("Create category id={0} name={1}", entity.cat_id, entity.cat_name));
-                }
-            }
+                _repository.Edit(entity);
+                _repository.SaveChanges();
+                Log.Info(string.Format("Create category id={0} name={1}", entity.cat_id, entity.cat_name));
 
+                return GenerateJson(entity, false, "Catégorie modifiée.");
+            }
+        }
+
+        private ActionResult GenerateJson(T_Category entity, bool isNew, string msg)
+        {
             return Json(new
                 {
-                    msg = msg,
-                    isNew = isNew,
                     entityName = "Category",
                     id = entity.cat_id,
                     fields = new
                     {
                         cat_name = entity.cat_name
-                    }
+                    },
+                    isNew = isNew,
+                    msg = msg
                 });
-        }
-
-        public ActionResult Remove(int id)
-        {
-            using (var context = new CategoryRepository())
-            {
-                T_Category entity = context.GetById(id);
-                Log.Info(string.Format("Remove category id={0} name={1}", entity.cat_id, entity.cat_name));
-
-                context.Remove(entity);
-                context.SaveChanges();
-
-                return Content("Catégorie supprimée.", "text/html");
-            }
         }
     }
 }

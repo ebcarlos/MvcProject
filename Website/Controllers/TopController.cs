@@ -1,6 +1,5 @@
 ﻿using BusinessLogic.Repository;
 using Common.Tools;
-using DataAccess;
 using DataAccess.Repository;
 using Softox.Models;
 using System.Linq;
@@ -10,40 +9,39 @@ namespace Softox.Controllers
 {
     public class TopController : Controller
     {
-        /// <summary>
-        /// Index of the page
-        /// </summary>
-        public ActionResult Index()
+        private TopRepository _repository;
+
+        public TopController()
         {
-            using (var context = new TopRepository())
-            {
-                ViewBag.Entities = context.Get().OrderBy(x => x.top_title).ToList();
-                return View();
-            }
+            _repository = new TopRepository();
         }
 
-        /// <summary>
-        /// Action to load the view where you can add an object
-        /// </summary>
+        public ActionResult Index()
+        {
+            ViewBag.Entities = _repository.Get().OrderBy(x => x.top_title).ToList();
+            return View();
+        }
+
+        public ActionResult Remove(int id)
+        {
+            T_Top entity = _repository.GetById(id);
+            _repository.Remove(entity);
+            _repository.SaveChanges();
+            Log.Info(string.Format("Remove top id={0} name={1}", entity.top_id, entity.top_title));
+
+            return Content("Classement supprimé.", "text/html");
+        }
+
         public ActionResult Add()
         {
             return PartialView("Manager", new TopModel());
         }
 
-        /// <summary>
-        /// Action to load the view where you can edit an object
-        /// </summary>
         public ActionResult Edit(int id)
         {
-            using (var context = new TopRepository())
-            {
-                return PartialView("Manager", TopModel.EntityToModel(context.GetById(id)));
-            }
+            return PartialView("Manager", TopModel.EntityToModel(_repository.GetById(id)));
         }
 
-        /// <summary>
-        /// Action to save an object (Add or Edit it in the db)
-        /// </summary>
         [HttpPost]
         public ActionResult SaveChanges(TopModel model)
         {
@@ -51,58 +49,40 @@ namespace Softox.Controllers
                 return null;
 
             T_Top entity = TopModel.ModelToEntity(model);
-            string msg = string.Empty;
-            bool isNew = true;
+
+            // Save add action
             if (model.top_id <= 0)
             {
-                msg = "Nouveau classement ajouté.";
-                using (var context = new TopRepository())
-                {
-                    context.Add(entity);
-                    context.SaveChanges();
-                    Log.Info(string.Format("Edit top id={0} name={1}", entity.top_id, entity.top_title));
-                }
+                _repository.Add(entity);
+                _repository.SaveChanges();
+                Log.Info(string.Format("Edit top id={0} name={1}", entity.top_id, entity.top_title));
+
+                return GenerateJson(entity, true, "Nouveau classement ajouté.");
             }
+            // Save edit action
             else
             {
-                msg = "Classement modifié.";
-                isNew = false;
-                using (var context = new TopRepository())
-                {
-                    context.Edit(entity);
-                    context.SaveChanges();
-                    Log.Info(string.Format("Create top id={0} name={1}", entity.top_id, entity.top_title));
-                }
-            }
+                _repository.Edit(entity);
+                _repository.SaveChanges();
+                Log.Info(string.Format("Create top id={0} name={1}", entity.top_id, entity.top_title));
 
-            return Json(new
-            {
-                msg = msg,
-                isNew = isNew,
-                entityName = "Top",
-                id = entity.top_id,
-                fields = new
-                {
-                    top_title = entity.top_title
-                }
-            });
+                return GenerateJson(entity, false, "Classement modifié.");
+            }
         }
 
-        /// <summary>
-        /// Action to remove an object (Remove in db)
-        /// </summary>
-        public ActionResult Remove(int id)
+        private ActionResult GenerateJson(T_Top entity, bool isNew, string msg)
         {
-            using (var context = new TopRepository())
-            {
-                T_Top entity = context.GetById(id);
-                Log.Info(string.Format("Remove category id={0} name={1}", entity.top_id, entity.top_title));
-
-                context.Remove(entity);
-                context.SaveChanges();
-
-                return Content("Classement supprimé.", "text/html");
-            }
+            return Json(new
+                {
+                    entityName = "Top",
+                    id = entity.top_id,
+                    fields = new
+                    {
+                        top_title = entity.top_title
+                    },
+                    isNew = isNew,
+                    msg = msg
+                });
         }
     }
 }

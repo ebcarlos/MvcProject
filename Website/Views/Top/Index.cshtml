@@ -1,7 +1,9 @@
-﻿@{
+﻿@using DataAccess.Repository
+
+@{
     ViewBag.Title = "Classements";
     string entityName = "Top";
-    IList<DataAccess.T_Top> entities = ViewBag.Entities;
+    IList<T_Top> entities = (List<T_Top>)ViewBag.Entities;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -25,8 +27,7 @@
     <tr>
         <th>#</th>
         <th>Titre</th>
-        <th></th>
-        <th></th>
+        <th>Actions</th>
     </tr>
     @foreach (var entity in entities.Select((value, index) => new { value, index }))
     {
@@ -39,8 +40,6 @@
             </td>
             <td class="td_btn">
                 <button class="btn btn-success" onclick="OnClickEdit('@entityName', @entity.value.top_id)">Editer</button>
-            </td>
-            <td class="td_btn">
                 <button class="btn btn-danger" onclick="OnClickRemove('@entityName', @entity.value.top_id)">Supprimer</button>
             </td>
         </tr>

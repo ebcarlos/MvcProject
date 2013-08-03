@@ -1,7 +1,9 @@
-﻿@{
+﻿@using DataAccess.Repository
+
+@{
     ViewBag.Title = "Utilisateurs";
     string entityName = "User";
-    List<DataAccess.T_User> entities = (List<DataAccess.T_User>)ViewBag.Entities;
+    List<T_User> entities = (List<T_User>)ViewBag.Entities;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -28,8 +30,7 @@
         <th>Status</th>
         <th>Description</th>
         <th>Inscription</th>
-        <th></th>
-        <th></th>
+        <th>Actions</th>
     </tr>
     @foreach (var entity in entities.Select((value, index) => new { value, index }))
     {
@@ -41,7 +42,7 @@
                 @entity.value.user_name
             </td>
             <td id="user_status_@entity.value.user_id">
-                @Html.Raw(DataAccess.Status.GetMemberName<DataAccess.UserStatus>(entity.value.user_status))
+                @* @Html.Raw(DataAccess.Status.GetMemberName<DataAccess.UserStatus>(entity.value.user_status))*@
             </td>
             <td id="user_desc_@entity.value.user_id">
                 @entity.value.user_desc
@@ -51,8 +52,6 @@
             </td>
             <td class="td_btn">
                 <button class="btn btn-success" onclick="OnClickEdit('@entityName', @entity.value.user_id)">Editer</button>
-            </td>
-            <td class="td_btn">
                 <button class="btn btn-danger" onclick="OnClickRemove('@entityName', @entity.value.user_id)">Supprimer</button>
             </td>
         </tr>

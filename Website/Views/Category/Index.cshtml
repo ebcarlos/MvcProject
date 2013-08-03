@@ -16,33 +16,33 @@
 @if (entities.Count == 0)
 {
     <p>Aucune catégorie</p>
-}
-else
-{
-    <table class="table table-bordered" id="manager_tab">
-        <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th></th>
-            <th></th>
-        </tr>
-        @foreach (var entity in entities.Select((value, index) => new { value, index }))
-        {
-            <tr id="cat_tr_@entity.value.cat_id">
-                <td class="td_num">
-                    @entity.index
-                </td>
-                <td id="cat_name_@entity.value.cat_id">
-                    @entity.value.cat_name
-                </td>
-                <td class="td_btn">
-                    <button class="btn btn-success" onclick="OnClickEdit('@entityName', @entity.value.cat_id)">Editer</button>
-                </td>
-                <td class="td_btn">
-                    <button class="btn btn-danger" onclick="OnClickRemove('@entityName', @entity.value.cat_id)">Supprimer</button>
-                </td>
-            </tr>
+    <style>
+        #manager_tab {
+            display: none;
         }
-    </table>
-    <div id="manager_contener"></div>
+    </style>
 }
+
+<table class="table table-bordered" id="manager_tab">
+    <tr>
+        <th>#</th>
+        <th>Nom</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var entity in entities.Select((value, index) => new { value, index }))
+    {
+        <tr id="tr_@entity.value.cat_id">
+            <td class="td_num">
+                @entity.index
+            </td>
+            <td id="cat_name_@entity.value.cat_id">
+                @entity.value.cat_name
+            </td>
+            <td class="td_btn">
+                <button class="btn btn-success" onclick="OnClickEdit('@entityName', @entity.value.cat_id)">Editer</button>
+                <button class="btn btn-danger" onclick="OnClickRemove('@entityName', @entity.value.cat_id)">Supprimer</button>
+            </td>
+        </tr>
+    }
+</table>
+<div id="manager_contener"></div>
