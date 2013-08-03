@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Common.Tools
 {
+    /// <summary>
+    /// Class to manage logs
+    /// </summary>
     public static class Log
     {
         private static readonly log4net.ILog _log;

@@ -6,15 +6,13 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common.BaseClass
 {
     /// <summary>
     /// Class to manage entities
     /// </summary>
-    /// <typeparam name="T_Entitie">Type of entitie (Table)</typeparam>
+    /// <typeparam name="T_Entitie">Type of entitie</typeparam>
     abstract public class BaseRepository<T_Entitie> : IDisposable
         where T_Entitie : class
     {
@@ -68,20 +66,12 @@ namespace Common.BaseClass
         }
 
         /// <summary>
-        /// Count entities in the database
-        /// </summary>
-        public int Count()
-        {
-            return _context.Set<T_Entitie>().Count();
-        }
-
-        /// <summary>
         /// Count entities in the database which valid an expression
         /// </summary>
         /// <param name="expression">Expression to validate</param>
-        public int Count(Expression<Func<T_Entitie, bool>> expression)
+        public int Count(Expression<Func<T_Entitie, bool>> expression = null)
         {
-            return _context.Set<T_Entitie>().Where(expression).Count();
+            return _context.Set<T_Entitie>().Count(expression);
         }
 
         /// <summary>
@@ -121,7 +111,7 @@ namespace Common.BaseClass
         {
             try
             {
-                return SaveChanges();
+                return _context.SaveChanges();
             }
             catch (DbEntityValidationException e)
             {

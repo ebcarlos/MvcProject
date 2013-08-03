@@ -1,6 +1,5 @@
 ﻿using BusinessLogic.Repository;
 using Common.Tools;
-using DataAccess;
 using DataAccess.Repository;
 using Softox.Models;
 using System.Linq;
@@ -10,9 +9,6 @@ namespace Softox.Controllers
 {
     public class CategoryController : Controller
     {
-        /// <summary>
-        /// Index of the page
-        /// </summary>
         public ActionResult Index()
         {
             using (var context = new CategoryRepository())
@@ -22,17 +18,11 @@ namespace Softox.Controllers
             }
         }
 
-        /// <summary>
-        /// Action to load the view where you can add an object
-        /// </summary>
         public ActionResult Add()
         {
             return PartialView("Manager", new CategoryModel());
         }
 
-        /// <summary>
-        /// Action to load the view where you can edit an object
-        /// </summary>
         public ActionResult Edit(int id)
         {
             using (var context = new CategoryRepository())
@@ -41,9 +31,6 @@ namespace Softox.Controllers
             }
         }
 
-        /// <summary>
-        /// Action to save an object (Add or Edit it in the db)
-        /// </summary>
         [HttpPost]
         public ActionResult SaveChanges(CategoryModel model)
         {
@@ -88,9 +75,6 @@ namespace Softox.Controllers
                 });
         }
 
-        /// <summary>
-        /// Action to remove an object (Remove in db)
-        /// </summary>
         public ActionResult Remove(int id)
         {
             using (var context = new CategoryRepository())

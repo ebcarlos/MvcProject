@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common.Tools
 {
@@ -12,7 +9,7 @@ namespace Common.Tools
     /// </summary>
     public class SettingsHelper
     {
-        #region Constructor & Properties
+        #region Constructor & Methods
 
         private static string[] _appSettingsKeys;
 
@@ -24,31 +21,22 @@ namespace Common.Tools
             _appSettingsKeys = ConfigurationManager.AppSettings.Keys.Cast<string>().ToArray();
         }
 
-        #endregion Constructor & Properties
-
-        #region Methods
-
         /// <summary>
         /// Get the key value matching the current environment
         /// </summary>
         public static string GetSetting(string key)
         {
             string keyWithEnvironment = string.Format("{0}_{1}", key, CurrentEnvironment);
+
             if (_appSettingsKeys.Contains(keyWithEnvironment))
-            {
                 return ConfigurationManager.AppSettings[keyWithEnvironment];
-            }
             else if (_appSettingsKeys.Contains(key))
-            {
                 return ConfigurationManager.AppSettings[key];
-            }
             else
-            {
                 throw new Exception(string.Format(@"Can't find the key ""{0}""", key));
-            }
         }
 
-        #endregion Methods
+        #endregion Constructor & Methods
 
         #region Key Accessors
 

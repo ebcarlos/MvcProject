@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    abstract public class SoftoxRepository<T> : BaseRepository<T>
-        where T : class
+    abstract public class SoftoxRepository<T> : BaseRepository<T> where T : class
     {
-        public SoftoxRepository()
-            : base(SettingsHelper.ConnectionString) { }
+        public SoftoxRepository() : base(SettingsHelper.ConnectionString) { }
     }
 }
