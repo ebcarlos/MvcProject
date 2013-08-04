@@ -17,6 +17,7 @@
         </div>
         <div class="modal-body">
             @Html.HiddenFor(m => m.user_id)
+            @Html.HiddenFor(m => m.user_password)
             <div class="control-group">
                 <label class="control-label">@Html.LabelFor(m => m.user_name)</label>
                 <div class="controls">
@@ -27,6 +28,10 @@
                 <div class="controls">
                     @Html.TextBoxFor(m => m.user_desc)
                     <p>@Html.ValidationMessageFor(m => m.user_desc)</p>
+                </div>
+                <label class="control-label">@Html.LabelFor(m => m.user_status)</label>
+                <div class="controls">
+                    @Html.DropDownListFor(x => x.StatusSelected, Model.StatusList)
                 </div>
             </div>
         </div>

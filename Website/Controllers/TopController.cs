@@ -9,24 +9,24 @@ namespace Softox.Controllers
 {
     public class TopController : Controller
     {
-        private TopRepository _repository;
+        private TopRepository _context;
 
         public TopController()
         {
-            _repository = new TopRepository();
+            _context = new TopRepository();
         }
 
         public ActionResult Index()
         {
-            ViewBag.Entities = _repository.Get().OrderBy(x => x.top_title).ToList();
+            ViewBag.Entities = _context.Get().OrderBy(x => x.top_title).ToList();
             return View();
         }
 
         public ActionResult Remove(int id)
         {
-            T_Top entity = _repository.GetById(id);
-            _repository.Remove(entity);
-            _repository.SaveChanges();
+            T_Top entity = _context.GetById(id);
+            _context.Remove(entity);
+            _context.SaveChanges();
             Log.Info(string.Format("Remove top id={0} name={1}", entity.top_id, entity.top_title));
 
             return Content("Classement supprimé.", "text/html");
@@ -39,7 +39,7 @@ namespace Softox.Controllers
 
         public ActionResult Edit(int id)
         {
-            return PartialView("Manager", TopModel.EntityToModel(_repository.GetById(id)));
+            return PartialView("Manager", TopModel.EntityToModel(_context.GetById(id)));
         }
 
         [HttpPost]
@@ -53,8 +53,8 @@ namespace Softox.Controllers
             // Save add action
             if (model.top_id <= 0)
             {
-                _repository.Add(entity);
-                _repository.SaveChanges();
+                _context.Add(entity);
+                _context.SaveChanges();
                 Log.Info(string.Format("Edit top id={0} name={1}", entity.top_id, entity.top_title));
 
                 return GenerateJson(entity, true, "Nouveau classement ajouté.");
@@ -62,8 +62,8 @@ namespace Softox.Controllers
             // Save edit action
             else
             {
-                _repository.Edit(entity);
-                _repository.SaveChanges();
+                _context.Edit(entity);
+                _context.SaveChanges();
                 Log.Info(string.Format("Create top id={0} name={1}", entity.top_id, entity.top_title));
 
                 return GenerateJson(entity, false, "Classement modifié.");

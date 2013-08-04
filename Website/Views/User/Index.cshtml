@@ -1,4 +1,6 @@
-﻿@using DataAccess.Repository
+﻿@using DataAccess.Status
+@using DataAccess.Repository
+@using Common.Tools
 
 @{
     ViewBag.Title = "Utilisateurs";
@@ -42,7 +44,7 @@
                 @entity.value.user_name
             </td>
             <td id="user_status_@entity.value.user_id">
-                @* @Html.Raw(DataAccess.Status.GetMemberName<DataAccess.UserStatus>(entity.value.user_status))*@
+                @Html.Raw(StatusHelper.GetName<UserStatus>(entity.value.user_status))
             </td>
             <td id="user_desc_@entity.value.user_id">
                 @entity.value.user_desc

@@ -1,12 +1,9 @@
-﻿using BusinessLogic.Repository;
-using Common.BaseClass;
+﻿using Common.BaseClass;
 using Common.Tools;
-using DataAccess;
 using DataAccess.Repository;
 using DataAccess.Status;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Web.Mvc;
 
 namespace Softox.Models
@@ -30,14 +27,21 @@ namespace Softox.Models
         [Display(Name = "Status")]
         public byte user_status { get; set; }
 
-        public SelectList user_status_list { get; set; }
+        [Required]
+        public int StatusSelected { get; set; }
+        public SelectList StatusList { get; set; }
 
         public UserModel()
         {
-            using (var context = new UserRepository())
-            {
-                user_status_list = new SelectList(StatusHelper.GetList<UserStatus>(), "Item2", "Item1");
-            }
+            StatusList = new SelectList(StatusHelper.GetList<UserStatus>(), "Key", "Value");
+        }
+
+        public static new T_User ModelToEntity(UserModel model)
+        {
+            T_User entity = BaseModel<UserModel, T_User>.ModelToEntity(model);
+            entity.user_status = (byte)model.StatusSelected;
+
+            return entity;
         }
     }
 
@@ -54,23 +58,5 @@ namespace Softox.Models
 
         [Display(Name = "Se souvenir de moi?")]
         public bool RememberMe { get; set; }
-    }
-
-    public class RegisterModel
-    {
-        [Required(ErrorMessage = "Le champ {0} est requis.")]
-        [Display(Name = "Pseudo")]
-        public string UserName { get; set; }
-
-        [Required(ErrorMessage = "Le champ {0} est requis.")]
-        [StringLength(100, ErrorMessage = "Le {0} doit être composé d'au moins {2} caractères.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Mot de passe")]
-        public string Password { get; set; }
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirmation mot de passe")]
-        // [Compare("Password", ErrorMessage = "Le mot de passe et la confirmation ne sont pas identique.")]
-        public string ConfirmPassword { get; set; }
     }
 }

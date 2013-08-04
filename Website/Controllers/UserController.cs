@@ -1,8 +1,9 @@
 ﻿using BusinessLogic.Repository;
 using Common.Tools;
-using DataAccess;
 using DataAccess.Repository;
+using DataAccess.Status;
 using Softox.Models;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -10,24 +11,24 @@ namespace Softox.Controllers
 {
     public class UserController : Controller
     {
-        private UserRepository _repository;
+        private UserRepository _context;
 
         public UserController()
         {
-            _repository = new UserRepository();
+            _context = new UserRepository();
         }
 
         public ActionResult Index()
         {
-            ViewBag.Entities = _repository.Get().OrderBy(x => x.user_name).ToList();
+            ViewBag.Entities = _context.Get().OrderBy(x => x.user_name).ToList();
             return View();
         }
 
         public ActionResult Remove(int id)
         {
-            T_User entity = _repository.GetById(id);
-            _repository.Remove(entity);
-            _repository.SaveChanges();
+            T_User entity = _context.GetById(id);
+            _context.Remove(entity);
+            _context.SaveChanges();
             Log.Info(string.Format("Remove user id={0} name={1}", entity.user_id, entity.user_name));
 
             return Content("Utilisateur supprimé.", "text/html");
@@ -40,7 +41,7 @@ namespace Softox.Controllers
 
         public ActionResult Edit(int id)
         {
-            return PartialView("Manager", UserModel.EntityToModel(_repository.GetById(id)));
+            return PartialView("Manager", UserModel.EntityToModel(_context.GetById(id)));
         }
 
         [HttpPost]
@@ -54,8 +55,11 @@ namespace Softox.Controllers
             // Save add action
             if (model.user_id <= 0)
             {
-                _repository.Add(entity);
-                _repository.SaveChanges();
+                entity.user_password = "soft";
+                entity.user_date_subscription = DateTime.Now;
+
+                _context.Add(entity);
+                _context.SaveChanges();
                 Log.Info(string.Format("Edit user id={0} name={1}", entity.user_id, entity.user_name));
 
                 return GenerateJson(entity, true, "Nouveau utilisateur ajouté.");
@@ -63,8 +67,8 @@ namespace Softox.Controllers
             // Save edit action
             else
             {
-                _repository.Edit(entity);
-                _repository.SaveChanges();
+                _context.Edit(entity);
+                _context.SaveChanges();
                 Log.Info(string.Format("Create user id={0} name={1}", entity.user_id, entity.user_name));
 
                 return GenerateJson(entity, false, "Utilisateur modifié.");
@@ -79,7 +83,10 @@ namespace Softox.Controllers
                     id = entity.user_id,
                     fields = new
                     {
-                        user_name = entity.user_name
+                        user_name = entity.user_name,
+                        user_status = StatusHelper.GetName<UserStatus>(entity.user_status),
+                        user_desc = entity.user_desc,
+                        user_date_subscription = entity.user_date_subscription.ToShortDateString()
                     },
                     isNew = isNew,
                     msg = msg
